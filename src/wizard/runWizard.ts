@@ -5,12 +5,14 @@ import {
   updateProxyProviderUrl,
 } from "../config/mutator";
 import { createDefaultRegistry } from "../parsers/registry";
+import { promptBaseConfigPath } from "../ui/baseConfigInput";
 import { promptGroupSelection } from "../ui/groupSelector";
 import { promptOutputName } from "../ui/outputNameInput";
 import { promptSingleSelect } from "../ui/singleSelect";
 import { promptPrimaryInput } from "../ui/vlessInput";
+import { promises as fs } from "node:fs";
 
-const BASE_CONFIG_PATH = "Clash.yaml";
+const DEFAULT_BASE_CONFIG_PATH = "Clash.yaml";
 
 function sanitizeOutputStem(value: string): string {
   const normalized = value.trim().replace(/\.ya?ml$/i, "");
@@ -53,8 +55,28 @@ async function resolveOutputPath(): Promise<string> {
   return toYamlOutputPath(entered);
 }
 
-async function pickGroups(): Promise<string[]> {
-  const writableGroupNames = await listWritableProxyGroupNames(BASE_CONFIG_PATH);
+async function resolveBaseConfigPath(): Promise<string> {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    throw new Error("当前环境不支持交互输入。请在终端中运行。");
+  }
+
+  const entered = await promptBaseConfigPath(DEFAULT_BASE_CONFIG_PATH);
+  if (!entered) {
+    throw new Error("已取消。");
+  }
+
+  const baseConfigPath = entered.trim();
+  try {
+    await fs.access(baseConfigPath);
+  } catch {
+    throw new Error(`基础配置文件不存在: ${baseConfigPath}`);
+  }
+
+  return baseConfigPath;
+}
+
+async function pickGroups(baseConfigPath: string): Promise<string[]> {
+  const writableGroupNames = await listWritableProxyGroupNames(baseConfigPath);
 
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     throw new Error("当前环境不支持交互输入。请在终端中运行。");
@@ -68,8 +90,12 @@ async function pickGroups(): Promise<string[]> {
   return selected;
 }
 
-async function handleProviderUrl(input: string, outputPath: string): Promise<string> {
-  const providerNames = await listProxyProviderNames(BASE_CONFIG_PATH);
+async function handleProviderUrl(
+  input: string,
+  outputPath: string,
+  baseConfigPath: string,
+): Promise<string> {
+  const providerNames = await listProxyProviderNames(baseConfigPath);
   if (providerNames.length === 0) {
     throw new Error("未找到 proxy-providers，无法写入订阅链接。");
   }
@@ -77,7 +103,10 @@ async function handleProviderUrl(input: string, outputPath: string): Promise<str
   let providerName = providerNames[0] as string;
 
   if (providerNames.length > 1) {
-    const selected = await promptSingleSelect("请选择要更新的 proxy-provider", providerNames);
+    const selected = await promptSingleSelect(
+      "请选择要更新的 proxy-provider",
+      providerNames,
+    );
     if (!selected) {
       throw new Error("已取消。");
     }
@@ -85,7 +114,7 @@ async function handleProviderUrl(input: string, outputPath: string): Promise<str
   }
 
   const result = await updateProxyProviderUrl({
-    baseConfigPath: BASE_CONFIG_PATH,
+    baseConfigPath,
     outputPath,
     providerName,
     url: input,
@@ -94,14 +123,18 @@ async function handleProviderUrl(input: string, outputPath: string): Promise<str
   return `已生成 ${result.outputPath}，已更新 proxy-provider: ${result.providerName}`;
 }
 
-async function handleProxyNode(input: string, outputPath: string): Promise<string> {
+async function handleProxyNode(
+  input: string,
+  outputPath: string,
+  baseConfigPath: string,
+): Promise<string> {
   const registry = createDefaultRegistry();
   const proxy = registry.parseProxyNode(input);
-  const selectedGroups = await pickGroups();
+  const selectedGroups = await pickGroups(baseConfigPath);
 
   const result = await addProxyToClashConfig({
     proxy,
-    baseConfigPath: BASE_CONFIG_PATH,
+    baseConfigPath,
     outputPath,
     targetGroupNames: selectedGroups,
     removeAllProxiesProvider: true,
@@ -111,6 +144,7 @@ async function handleProxyNode(input: string, outputPath: string): Promise<strin
 }
 
 export async function runWizard(): Promise<string> {
+  const baseConfigPath = await resolveBaseConfigPath();
   const input = await resolveInteractiveInput();
   const outputPath = await resolveOutputPath();
 
@@ -118,8 +152,8 @@ export async function runWizard(): Promise<string> {
   const kind = registry.detectKind(input);
 
   if (kind === "provider-url") {
-    return handleProviderUrl(input, outputPath);
+    return handleProviderUrl(input, outputPath, baseConfigPath);
   }
 
-  return handleProxyNode(input, outputPath);
+  return handleProxyNode(input, outputPath, baseConfigPath);
 }
