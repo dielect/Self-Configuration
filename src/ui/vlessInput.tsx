@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
 import TextInput from "ink-text-input";
+import { ScreenCard } from "./ScreenCard";
+import StepLine from "./StepLine";
+import { Theme } from "./theme";
 
 type PrimaryInputProps = {
   onSubmit: (value: string) => void;
@@ -19,22 +22,35 @@ function PrimaryInput({ onSubmit, onCancel }: PrimaryInputProps) {
   });
 
   return (
-    <Box flexDirection="column">
-      <Text>请输入订阅链接或节点（回车确认，q/ESC 取消）</Text>
-      <TextInput
-        value={value}
-        onChange={setValue}
-        onSubmit={(text) => {
-          const trimmed = text.trim();
-          if (!trimmed) {
-            return;
-          }
-          onSubmit(trimmed);
-          exit();
-        }}
-      />
-      <Text color="gray">支持: https://订阅链接 / vless://链接 / YAML/JSON 节点</Text>
-    </Box>
+    <ScreenCard
+      title="Input Source"
+      subtitle="粘贴订阅链接或节点文本"
+      hint="Enter 确认 · q/ESC 取消"
+    >
+      <Box flexDirection="column">
+        <StepLine status="running">等待输入</StepLine>
+        <Box marginTop={1}>
+          <Text color={Theme.colors.primary}>{Theme.symbols.pointer} </Text>
+          <TextInput
+            value={value}
+            onChange={setValue}
+            onSubmit={(text) => {
+              const trimmed = text.trim();
+              if (!trimmed) {
+                return;
+              }
+              onSubmit(trimmed);
+              exit();
+            }}
+          />
+        </Box>
+        <Box marginTop={1} flexDirection="column">
+          <Text color={Theme.colors.dim}>• 支持 https:// 订阅链接</Text>
+          <Text color={Theme.colors.dim}>• 支持 vless://、YAML、JSON 节点</Text>
+          <Text color={Theme.colors.secondary}>长度: {value.length}</Text>
+        </Box>
+      </Box>
+    </ScreenCard>
   );
 }
 
