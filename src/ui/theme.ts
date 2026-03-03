@@ -9,7 +9,6 @@ export const Theme = {
     text: "#E6E6E6",
     dim: "#737373",
     dimmer: "#4A4A4A",
-    border: "#555555",
     highlight: "#FFFFFF",
     info: "#4A9EFF",
   },

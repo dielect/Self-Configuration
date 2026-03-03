@@ -60,13 +60,7 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
     <Box flexDirection="column">
       <Logo />
 
-      <Box
-        borderStyle="round"
-        borderColor={Theme.colors.border}
-        paddingLeft={1}
-        paddingRight={1}
-        flexDirection="column"
-      >
+      <Box paddingLeft={1} flexDirection="column">
         <Text>
           <Text color={Theme.colors.primary} bold>{Theme.symbols.star} </Text>
           <Text color={Theme.colors.highlight} bold>选择策略组</Text>
@@ -83,10 +77,7 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
 
       <Box
         marginTop={1}
-        borderStyle="round"
-        borderColor={Theme.colors.border}
         paddingLeft={1}
-        paddingRight={1}
         flexDirection="column"
       >
         {rows.map((row, index) => {

@@ -31,13 +31,7 @@ export function ScreenCard({
     <Box flexDirection="column">
       <Logo />
 
-      <Box
-        borderStyle="round"
-        borderColor={Theme.colors.border}
-        paddingLeft={1}
-        paddingRight={1}
-        flexDirection="column"
-      >
+      <Box paddingLeft={1} flexDirection="column">
         <Text>
           <Text color={Theme.colors.primary} bold>{Theme.symbols.star} </Text>
           <Text color={Theme.colors.highlight} bold>{title}</Text>
@@ -46,9 +40,7 @@ export function ScreenCard({
           ) : null}
         </Text>
         {subtitle ? (
-          <Box>
-            <Text color={Theme.colors.dim}>  {subtitle}</Text>
-          </Box>
+          <Text color={Theme.colors.dim}>  {subtitle}</Text>
         ) : null}
       </Box>
 
@@ -69,13 +61,7 @@ export function ScreenCard({
         </Box>
       ) : null}
 
-      <Box
-        marginTop={1}
-        borderStyle="round"
-        borderColor={Theme.colors.border}
-        paddingLeft={1}
-        paddingRight={1}
-      >
+      <Box marginTop={1} paddingLeft={1}>
         <Text color={Theme.colors.primary}>{spin} </Text>
         {children}
       </Box>

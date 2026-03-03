@@ -1,36 +1,16 @@
 import React, { memo } from "react";
-import { Box, Text } from "ink";
-import { useAnimationTick, deriveFrame } from "./useAnimationTick";
+import { Box } from "ink";
+import BigText from "ink-big-text";
+import Gradient from "ink-gradient";
 
-const ASCII_LINES = [
-  "█▀▀ █▀▀ █   █▀▀   █▀▀ █▀█ █▄ █ █▀▀ █ █▀▀",
-  "▀▀█ ██▄ █▄▄ █▀    █▄▄ █▄█ █ ▀█ █▀  █ █▄█",
-  "▀▀▀ ▀▀▀ ▀▀▀ ▀     ▀▀▀ ▀▀▀ ▀  ▀ ▀   ▀  ▀▀",
-];
-
-const GRADIENT = [
-  "#F0956D",
-  "#D97757",
-  "#A85A3E",
-  "#D97757",
-  "#F0956D",
-  "#E8A87C",
-];
+const SUNSET_COLORS = ["#ff9966", "#ff5e62", "#ffa34e"];
 
 export const Logo = memo(function Logo() {
-  const tick = useAnimationTick();
-  const offset = deriveFrame(tick, GRADIENT.length, 3);
-
   return (
-    <Box flexDirection="column" alignItems="center" marginBottom={1}>
-      {ASCII_LINES.map((line, i) => {
-        const colorIdx = (i + offset) % GRADIENT.length;
-        return (
-          <Text key={i} color={GRADIENT[colorIdx]} bold>
-            {line}
-          </Text>
-        );
-      })}
+    <Box flexDirection="column" marginBottom={1}>
+      <Gradient colors={SUNSET_COLORS}>
+        <BigText text="self config" font="block" />
+      </Gradient>
     </Box>
   );
 });
