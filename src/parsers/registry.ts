@@ -1,4 +1,5 @@
 import type { ProtocolParser, ProxyNode } from "./types";
+import { SsParser } from "./ssParser";
 import { VlessParser } from "./vlessParser";
 import { YamlNodeParser } from "./yamlNodeParser";
 
@@ -25,5 +26,9 @@ export class ParserRegistry {
 }
 
 export function createDefaultRegistry(): ParserRegistry {
-  return new ParserRegistry([new VlessParser(), new YamlNodeParser()]);
+  return new ParserRegistry([
+    new VlessParser(),
+    new SsParser(),
+    new YamlNodeParser(),
+  ]);
 }

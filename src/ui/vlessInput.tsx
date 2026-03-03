@@ -46,7 +46,7 @@ function PrimaryInput({ onSubmit, onCancel }: PrimaryInputProps) {
         </Box>
         <Box marginTop={1} flexDirection="column">
           <Text color={Theme.colors.dim}>• 支持 https:// 订阅链接</Text>
-          <Text color={Theme.colors.dim}>• 支持 vless://、YAML、JSON 节点</Text>
+          <Text color={Theme.colors.dim}>• 支持 vless://、ss://、YAML、JSON 节点</Text>
           <Text color={Theme.colors.secondary}>长度: {value.length}</Text>
         </Box>
       </Box>

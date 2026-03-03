@@ -1,4 +1,5 @@
 export { parseVlessToClashProxy } from "./src/lib/vless";
+export { parseSsToClashProxy } from "./src/lib/ss";
 export {
   addProxyToClashConfig,
   listProxyProviderNames,
