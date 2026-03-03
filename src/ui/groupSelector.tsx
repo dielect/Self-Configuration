@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
 import { Logo } from "./Logo";
-import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
@@ -58,58 +57,73 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
       : `将节点名写入: ${current}`;
 
   return (
-    <Box flexDirection="column" width={76}>
+    <Box flexDirection="column">
       <Logo />
 
-      <BorderBox>
+      <Box
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+        flexDirection="column"
+      >
         <Text>
-          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.primary} bold>{Theme.symbols.star} </Text>
           <Text color={Theme.colors.highlight} bold>选择策略组</Text>
         </Text>
         <Text color={Theme.colors.dim}>  选择要写入节点名的策略组</Text>
-      </BorderBox>
+      </Box>
 
       <Box marginTop={1} paddingLeft={1}>
         <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
-        <Text color={Theme.colors.dim}>↑↓ 导航 · Space 多选 · Enter 确认</Text>
+        <Text color={Theme.colors.dim}>
+          ↑↓ 导航 · Space 多选 · Enter 确认 · q 取消
+        </Text>
       </Box>
 
-      <Box marginTop={1}>
-        <BorderBox>
-          <Box flexDirection="column">
-            {rows.map((row, index) => {
-              const isSelected = index === selectedIndex;
-              const checked = row === "ALL" ? allSelected : selected.has(row);
-              const label = row === "ALL" ? "ALL" : row;
+      <Box
+        marginTop={1}
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+        flexDirection="column"
+      >
+        {rows.map((row, index) => {
+          const isSelected = index === selectedIndex;
+          const checked = row === "ALL" ? allSelected : selected.has(row);
+          const label = row === "ALL" ? "ALL" : row;
 
-              return (
-                <Box key={row}>
-                  <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
-                    {isSelected ? Theme.symbols.pointer : " "}{" "}
-                  </Text>
-                  <Text
-                    color={checked ? Theme.colors.successBright : Theme.colors.dimmer}
-                    bold={checked}
-                  >
-                    {checked ? Theme.symbols.circle : Theme.symbols.circleOpen}{" "}
-                  </Text>
-                  <Text
-                    color={isSelected ? Theme.colors.highlight : Theme.colors.text}
-                    bold={isSelected}
-                  >
-                    {label}
-                  </Text>
-                </Box>
-              );
-            })}
-          </Box>
-        </BorderBox>
+          return (
+            <Box key={row}>
+              <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
+                {isSelected ? Theme.symbols.pointer : " "}{" "}
+              </Text>
+              <Text
+                color={checked ? Theme.colors.successBright : Theme.colors.dimmer}
+                bold={checked}
+              >
+                {checked ? Theme.symbols.circle : Theme.symbols.circleOpen}{" "}
+              </Text>
+              <Text
+                color={isSelected ? Theme.colors.highlight : Theme.colors.text}
+                bold={isSelected}
+              >
+                {label}
+              </Text>
+            </Box>
+          );
+        })}
       </Box>
 
       <Box marginTop={1} paddingLeft={1}>
         <Text color={Theme.colors.dim}>
-          {Theme.symbols.spinner[spinIdx]} {currentDesc} · 已选 </Text>
-        <Text color={selected.size > 0 ? Theme.colors.primary : Theme.colors.dimmer} bold>
+          {Theme.symbols.spinner[spinIdx]} {currentDesc} · 已选{" "}
+        </Text>
+        <Text
+          color={selected.size > 0 ? Theme.colors.primary : Theme.colors.dimmer}
+          bold
+        >
           {selected.size}
         </Text>
         <Text color={Theme.colors.dim}> 项</Text>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
 import { Logo } from "./Logo";
-import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 
 type SingleSelectProps = {
@@ -37,43 +36,52 @@ function SingleSelect({ title, items, onSubmit, onCancel }: SingleSelectProps) {
   const current = items[selectedIndex] ?? "";
 
   return (
-    <Box flexDirection="column" width={76}>
+    <Box flexDirection="column">
       <Logo />
 
-      <BorderBox>
+      <Box
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+        flexDirection="column"
+      >
         <Text>
-          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.primary} bold>{Theme.symbols.star} </Text>
           <Text color={Theme.colors.highlight} bold>选择 Provider</Text>
         </Text>
         <Text color={Theme.colors.dim}>  {title}</Text>
-      </BorderBox>
+      </Box>
 
       <Box marginTop={1} paddingLeft={1}>
         <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
         <Text color={Theme.colors.dim}>↑↓ 导航 · Enter 确认 · q 取消</Text>
       </Box>
 
-      <Box marginTop={1}>
-        <BorderBox>
-          <Box flexDirection="column">
-            {items.map((item, index) => {
-              const isSelected = index === selectedIndex;
-              return (
-                <Box key={item}>
-                  <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
-                    {isSelected ? Theme.symbols.pointer : " "}{" "}
-                  </Text>
-                  <Text
-                    color={isSelected ? Theme.colors.highlight : Theme.colors.text}
-                    bold={isSelected}
-                  >
-                    {item}
-                  </Text>
-                </Box>
-              );
-            })}
-          </Box>
-        </BorderBox>
+      <Box
+        marginTop={1}
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+        flexDirection="column"
+      >
+        {items.map((item, index) => {
+          const isSelected = index === selectedIndex;
+          return (
+            <Box key={item}>
+              <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
+                {isSelected ? Theme.symbols.pointer : " "}{" "}
+              </Text>
+              <Text
+                color={isSelected ? Theme.colors.highlight : Theme.colors.text}
+                bold={isSelected}
+              >
+                {item}
+              </Text>
+            </Box>
+          );
+        })}
       </Box>
 
       <Box marginTop={1} paddingLeft={1}>

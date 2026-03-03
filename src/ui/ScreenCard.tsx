@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Text } from "ink";
 import { Logo } from "./Logo";
-import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
@@ -29,23 +28,29 @@ export function ScreenCard({
   const stepLabel = step ? ` (${step.current}/${step.total})` : "";
 
   return (
-    <Box flexDirection="column" width={76}>
+    <Box flexDirection="column">
       <Logo />
 
-      <BorderBox>
+      <Box
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+        flexDirection="column"
+      >
         <Text>
-          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.primary} bold>{Theme.symbols.star} </Text>
           <Text color={Theme.colors.highlight} bold>{title}</Text>
           {step ? (
             <Text color={Theme.colors.dim}>{stepLabel}</Text>
           ) : null}
         </Text>
         {subtitle ? (
-          <Box marginTop={0}>
+          <Box>
             <Text color={Theme.colors.dim}>  {subtitle}</Text>
           </Box>
         ) : null}
-      </BorderBox>
+      </Box>
 
       {bullets && bullets.length > 0 ? (
         <Box flexDirection="column" marginTop={1} paddingLeft={1}>
@@ -64,15 +69,15 @@ export function ScreenCard({
         </Box>
       ) : null}
 
-      <Box marginTop={1}>
-        <BorderBox>
-          <Box flexDirection="column">
-            <Box>
-              <Text color={Theme.colors.primary}>{spin} </Text>
-              {children}
-            </Box>
-          </Box>
-        </BorderBox>
+      <Box
+        marginTop={1}
+        borderStyle="round"
+        borderColor={Theme.colors.border}
+        paddingLeft={1}
+        paddingRight={1}
+      >
+        <Text color={Theme.colors.primary}>{spin} </Text>
+        {children}
       </Box>
     </Box>
   );

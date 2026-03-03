@@ -31,19 +31,17 @@ function PrimaryInput({ onSubmit, onCancel }: PrimaryInputProps) {
       ]}
       hint="Enter 确认 · q/ESC 取消"
     >
-      <Box>
-        <Text color={Theme.colors.highlight}>{Theme.symbols.arrow} </Text>
-        <TextInput
-          value={value}
-          onChange={setValue}
-          onSubmit={(text) => {
-            const trimmed = text.trim();
-            if (!trimmed) return;
-            onSubmit(trimmed);
-            exit();
-          }}
-        />
-      </Box>
+      <Text color={Theme.colors.highlight}>{Theme.symbols.arrow} </Text>
+      <TextInput
+        value={value}
+        onChange={setValue}
+        onSubmit={(text) => {
+          const trimmed = text.trim();
+          if (!trimmed) return;
+          onSubmit(trimmed);
+          exit();
+        }}
+      />
     </ScreenCard>
   );
 }
