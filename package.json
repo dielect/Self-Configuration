@@ -8,6 +8,7 @@
     "dev": "bun run server/index.ts & bunx vite --config web/vite.config.ts",
     "dev:server": "bun run server/index.ts",
     "dev:web": "bunx vite --config web/vite.config.ts",
+    "build": "vite build --config web/vite.config.ts",
     "check": "bunx tsc --noEmit"
   },
   "bin": {
