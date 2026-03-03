@@ -1,5 +1,11 @@
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+
+const LETTERS = [
+  { char: "S", delay: 0.08 },
+  { char: "E", delay: 0.13 },
+  { char: "L", delay: 0.18 },
+  { char: "F", delay: 0.23 },
+];
 
 export function Logo() {
   return (
@@ -31,33 +37,43 @@ export function Logo() {
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#ff5e62]/20 to-transparent" />
 
       <div className="relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="flex items-center gap-2 mb-4"
+          transition={{ delay: 0.05, duration: 0.4 }}
+          className="inline-block text-[11px] font-medium tracking-widest uppercase text-zinc-500 mb-5"
         >
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff9966] to-[#ff5e62] shadow-lg shadow-[#ff5e62]/20">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-xs font-medium tracking-widest uppercase text-zinc-500">
-            Proxy Configuration Tool
-          </span>
-        </motion.div>
+          Proxy Configuration Tool
+        </motion.span>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="flex items-baseline gap-3 mb-5"
-        >
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter bg-gradient-to-r from-[#ff9966] via-[#ff5e62] to-[#ffa34e] bg-clip-text text-transparent leading-none">
-            Self
-          </h1>
-          <span className="text-2xl sm:text-3xl font-extralight tracking-[0.25em] text-zinc-400 leading-none">
-            config
-          </span>
-        </motion.div>
+        <div className="flex items-end gap-1 mb-5">
+          <div className="flex">
+            {LETTERS.map(({ char, delay }) => (
+              <motion.span
+                key={char}
+                initial={{ opacity: 0, y: 30, rotateX: -60 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay, duration: 0.45, ease: "easeOut" }}
+                className="text-6xl sm:text-8xl font-black tracking-tighter bg-gradient-to-b from-white via-[#ff9966] to-[#ff5e62] bg-clip-text text-transparent leading-none"
+                style={{ display: "inline-block" }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ delay: 0.35, duration: 0.4, ease: "easeOut" }}
+            className="origin-left flex items-center gap-2 pb-2 sm:pb-3 ml-3"
+          >
+            <div className="w-6 h-px bg-gradient-to-r from-[#ff9966]/60 to-transparent" />
+            <span className="text-base sm:text-lg font-light tracking-[0.3em] text-zinc-500">
+              config
+            </span>
+          </motion.div>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}
@@ -72,7 +88,7 @@ export function Logo() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex items-center gap-4 mt-6"
+          className="flex flex-wrap items-center gap-2 mt-6"
         >
           {["VLESS", "Shadowsocks", "订阅链接", "YAML"].map((tag, i) => (
             <motion.span
