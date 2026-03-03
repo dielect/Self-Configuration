@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 
+const jb = { fontFamily: "'JetBrains Mono', monospace" };
+
 export function Logo() {
   return (
     <motion.div
@@ -28,7 +30,10 @@ export function Logo() {
           className="flex items-center gap-3 mb-10"
         >
           <div className="w-px h-3.5 bg-zinc-600" />
-          <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-600">
+          <span
+            className="text-[10px] tracking-[0.2em] uppercase text-zinc-600"
+            style={jb}
+          >
             Clash Proxy Configuration
           </span>
         </motion.div>
@@ -39,7 +44,7 @@ export function Logo() {
           transition={{ delay: 0.15, duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="leading-none" style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="leading-none" style={{ ...jb, letterSpacing: "-0.03em" }}>
             <span
               className="text-white font-extralight"
               style={{ fontSize: "clamp(3rem, 8vw, 5.5rem)" }}
@@ -47,10 +52,10 @@ export function Logo() {
               self
             </span>
             <span
-              className="text-zinc-700"
+              className="text-zinc-700 font-extralight"
               style={{
                 fontSize: "clamp(3rem, 8vw, 5.5rem)",
-                margin: "0 0.02em",
+                margin: "0 0.01em",
               }}
             >
               .
@@ -92,7 +97,8 @@ export function Logo() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 + i * 0.05 }}
-              className="text-[10px] font-mono tracking-wider px-2.5 py-1 rounded-md bg-zinc-900/80 text-zinc-500 border border-zinc-800/50"
+              className="text-[10px] tracking-wider px-2.5 py-1 rounded-md bg-zinc-900/80 text-zinc-500 border border-zinc-800/50"
+              style={jb}
             >
               {tag}
             </motion.span>
