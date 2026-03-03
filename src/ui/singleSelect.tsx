@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
-import { ScreenCard } from "./ScreenCard";
+import { Logo } from "./Logo";
+import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 
 type SingleSelectProps = {
@@ -36,52 +37,49 @@ function SingleSelect({ title, items, onSubmit, onCancel }: SingleSelectProps) {
   const current = items[selectedIndex] ?? "";
 
   return (
-    <ScreenCard
-      title="Provider Selector"
-      subtitle={title}
-      hint="↑↓ 导航 · Enter 确认 · q 取消"
-    >
-      <Box flexDirection="column">
-        {items.map((item, index) => {
-          const isSelected = index === selectedIndex;
-          return (
-            <Box key={item}>
-              <Text
-                color={
-                  isSelected ? Theme.colors.primaryBright : Theme.colors.dim
-                }
-              >
-                {isSelected ? Theme.symbols.pointer : " "}{" "}
-              </Text>
-              {isSelected ? (
-                <Text color={Theme.colors.glow} bold>
-                  {Theme.symbols.diamond}{" "}
-                </Text>
-              ) : (
-                <Text color={Theme.colors.dimmer}>
-                  {Theme.symbols.diamondSmall}{" "}
-                </Text>
-              )}
-              <Text
-                color={
-                  isSelected ? Theme.colors.primaryBright : Theme.colors.text
-                }
-                bold={isSelected}
-              >
-                {item}
-              </Text>
-            </Box>
-          );
-        })}
+    <Box flexDirection="column" width={76}>
+      <Logo />
 
-        <Box marginTop={1}>
-          <Text color={Theme.colors.dimmer}>
-            {Theme.symbols.pointerSmall}{" "}
-          </Text>
-          <Text color={Theme.colors.accent}>当前: {current}</Text>
-        </Box>
+      <BorderBox>
+        <Text>
+          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.highlight} bold>选择 Provider</Text>
+        </Text>
+        <Text color={Theme.colors.dim}>  {title}</Text>
+      </BorderBox>
+
+      <Box marginTop={1} paddingLeft={1}>
+        <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+        <Text color={Theme.colors.dim}>↑↓ 导航 · Enter 确认 · q 取消</Text>
       </Box>
-    </ScreenCard>
+
+      <Box marginTop={1}>
+        <BorderBox>
+          <Box flexDirection="column">
+            {items.map((item, index) => {
+              const isSelected = index === selectedIndex;
+              return (
+                <Box key={item}>
+                  <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
+                    {isSelected ? Theme.symbols.pointer : " "}{" "}
+                  </Text>
+                  <Text
+                    color={isSelected ? Theme.colors.highlight : Theme.colors.text}
+                    bold={isSelected}
+                  >
+                    {item}
+                  </Text>
+                </Box>
+              );
+            })}
+          </Box>
+        </BorderBox>
+      </Box>
+
+      <Box marginTop={1} paddingLeft={1}>
+        <Text color={Theme.colors.dim}>当前: {current}</Text>
+      </Box>
+    </Box>
   );
 }
 
@@ -94,12 +92,8 @@ export function promptSingleSelect(
       <SingleSelect
         title={title}
         items={items}
-        onSubmit={(value) => {
-          resolve(value);
-        }}
-        onCancel={() => {
-          resolve(null);
-        }}
+        onSubmit={(value) => resolve(value)}
+        onCancel={() => resolve(null)}
       />,
     );
   });

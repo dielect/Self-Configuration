@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
 import TextInput from "ink-text-input";
 import { ScreenCard } from "./ScreenCard";
-import StepLine from "./StepLine";
 import { Theme } from "./theme";
 
 type OutputNameInputProps = {
@@ -22,42 +21,29 @@ function OutputNameInput({ onSubmit, onCancel }: OutputNameInputProps) {
   });
 
   const preview = (value.trim() || "<name>") + ".yaml";
-  const hasValue = value.trim().length > 0;
 
   return (
     <ScreenCard
-      title="Output Profile"
-      subtitle="输入输出文件名（不含扩展名）"
-      hint="固定后缀: .yaml"
+      title="输出文件名"
+      subtitle="输入文件名（不含扩展名）"
       step={{ current: 3, total: 3 }}
+      bullets={[
+        `预览: ${preview}`,
+      ]}
+      hint="固定后缀 .yaml · Enter 确认"
     >
-      <Box flexDirection="column">
-        <StepLine status="running">配置输出路径</StepLine>
-        <Box marginTop={1}>
-          <Text color={Theme.colors.primary} bold>
-            {Theme.symbols.pointer}{" "}
-          </Text>
-          <TextInput
-            value={value}
-            onChange={setValue}
-            onSubmit={(text) => {
-              const trimmed = text.trim();
-              if (!trimmed) {
-                return;
-              }
-              onSubmit(trimmed);
-              exit();
-            }}
-          />
-        </Box>
-        <Box marginTop={1}>
-          <Text color={Theme.colors.dimmer}>
-            {Theme.symbols.pointerSmall}{" "}
-          </Text>
-          <Text color={hasValue ? Theme.colors.info : Theme.colors.dim}>
-            {Theme.symbols.diamond} {preview}
-          </Text>
-        </Box>
+      <Box>
+        <Text color={Theme.colors.highlight}>{Theme.symbols.arrow} </Text>
+        <TextInput
+          value={value}
+          onChange={setValue}
+          onSubmit={(text) => {
+            const trimmed = text.trim();
+            if (!trimmed) return;
+            onSubmit(trimmed);
+            exit();
+          }}
+        />
       </Box>
     </ScreenCard>
   );
@@ -67,12 +53,8 @@ export function promptOutputName(): Promise<string | null> {
   return new Promise((resolve) => {
     render(
       <OutputNameInput
-        onSubmit={(value) => {
-          resolve(value);
-        }}
-        onCancel={() => {
-          resolve(null);
-        }}
+        onSubmit={(value) => resolve(value)}
+        onCancel={() => resolve(null)}
       />,
     );
   });

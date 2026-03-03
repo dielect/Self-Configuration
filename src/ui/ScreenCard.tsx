@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import { Logo } from "./Logo";
-import { AnimatedBorder } from "./AnimatedBorder";
-import { GlowText } from "./GlowText";
+import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
@@ -10,6 +9,7 @@ type ScreenCardProps = {
   title: string;
   subtitle?: string;
   hint?: string;
+  bullets?: string[];
   children: React.ReactNode;
   step?: { current: number; total: number };
 };
@@ -18,68 +18,62 @@ export function ScreenCard({
   title,
   subtitle,
   hint,
+  bullets,
   children,
   step,
 }: ScreenCardProps) {
   const tick = useAnimationTick();
   const spinIdx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
-  const breatheIdx = deriveFrame(tick, Theme.symbols.breathe.length, 4);
-
   const spin = Theme.symbols.spinner[spinIdx] ?? Theme.symbols.spinner[0];
-  const breatheChar =
-    Theme.symbols.breathe[breatheIdx] ?? Theme.symbols.breathe[0];
 
-  const cardWidth = 76;
-
-  const stepLabel = step ? ` [${step.current}/${step.total}]` : "";
+  const stepLabel = step ? ` (${step.current}/${step.total})` : "";
 
   return (
-    <Box flexDirection="column" width={cardWidth + 4}>
+    <Box flexDirection="column" width={76}>
       <Logo />
-      <Box marginTop={1} />
-      <AnimatedBorder width={cardWidth} position="top" />
 
-      <Text>
-        <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
-        <Text color={Theme.colors.primary}> {spin} </Text>
-        <Text color={Theme.colors.highlight} bold>
-          {title}
-        </Text>
-        {step ? (
-          <Text color={Theme.colors.dim}>{stepLabel}</Text>
-        ) : null}
-      </Text>
-
-      {subtitle ? (
+      <BorderBox>
         <Text>
-          <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
-          <Text color={Theme.colors.dim}>   </Text>
-          <Text color={Theme.colors.accent}>{subtitle}</Text>
+          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.highlight} bold>{title}</Text>
+          {step ? (
+            <Text color={Theme.colors.dim}>{stepLabel}</Text>
+          ) : null}
         </Text>
+        {subtitle ? (
+          <Box marginTop={0}>
+            <Text color={Theme.colors.dim}>  {subtitle}</Text>
+          </Box>
+        ) : null}
+      </BorderBox>
+
+      {bullets && bullets.length > 0 ? (
+        <Box flexDirection="column" marginTop={1} paddingLeft={1}>
+          {bullets.map((b, i) => (
+            <Text key={i} color={Theme.colors.dim}>
+              {Theme.symbols.bullet} {b}
+            </Text>
+          ))}
+        </Box>
       ) : null}
-
-      <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
-
-      <Box paddingLeft={2} flexDirection="column">
-        {children}
-      </Box>
-
-      <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
 
       {hint ? (
-        <Text>
-          <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
-          <Text color={Theme.colors.dim}>
-            {" "}
-            <GlowText colors={Theme.colors.gradientWarm} speed={5}>
-              {breatheChar}
-            </GlowText>{" "}
-            {hint}
-          </Text>
-        </Text>
+        <Box marginTop={1} paddingLeft={1}>
+          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.dim}>{hint}</Text>
+        </Box>
       ) : null}
 
-      <AnimatedBorder width={cardWidth} position="bottom" />
+      <Box marginTop={1}>
+        <BorderBox>
+          <Box flexDirection="column">
+            <Box>
+              <Text color={Theme.colors.primary}>{spin} </Text>
+              {children}
+            </Box>
+          </Box>
+        </BorderBox>
+      </Box>
     </Box>
   );
 }

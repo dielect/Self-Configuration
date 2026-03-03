@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Box, Text, render, useApp, useInput } from "ink";
-import { ScreenCard } from "./ScreenCard";
+import { Logo } from "./Logo";
+import { BorderBox } from "./BorderBox";
 import { Theme } from "./theme";
 import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
@@ -15,7 +16,7 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const tick = useAnimationTick();
-  const breatheIdx = deriveFrame(tick, Theme.symbols.breathe.length, 4);
+  const spinIdx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
   const rows = useMemo(() => ["ALL", ...groups], [groups]);
 
   const allSelected =
@@ -32,24 +33,13 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
       setSelected((prev) => {
         const next = new Set(prev);
         const current = rows[selectedIndex];
-
         if (current === "ALL") {
-          if (allSelected) {
-            next.clear();
-          } else {
-            for (const g of groups) {
-              next.add(g);
-            }
-          }
+          if (allSelected) { next.clear(); }
+          else { for (const g of groups) next.add(g); }
           return next;
         }
-
-        if (current && next.has(current)) {
-          next.delete(current);
-        } else if (current) {
-          next.add(current);
-        }
-
+        if (current && next.has(current)) next.delete(current);
+        else if (current) next.add(current);
         return next;
       });
     } else if (key.return) {
@@ -67,75 +57,64 @@ function GroupSelector({ groups, onSubmit, onCancel }: GroupSelectorProps) {
       ? "全选或全不选策略组"
       : `将节点名写入: ${current}`;
 
-  const breatheChar =
-    Theme.symbols.breathe[breatheIdx] ?? Theme.symbols.breathe[0];
-
   return (
-    <ScreenCard
-      title="Group Selector"
-      subtitle="选择要写入节点名的策略组"
-      hint="↑↓ 导航 · Space 多选 · Enter 确认"
-    >
-      <Box flexDirection="column">
-        {rows.map((row, index) => {
-          const isSelected = index === selectedIndex;
-          const checked = row === "ALL" ? allSelected : selected.has(row);
-          const label = row === "ALL" ? "ALL" : row;
+    <Box flexDirection="column" width={76}>
+      <Logo />
 
-          const checkColor = checked
-            ? Theme.colors.successBright
-            : Theme.colors.dimmer;
-          const checkSymbol = checked
-            ? Theme.symbols.circle
-            : Theme.symbols.circleOpen;
+      <BorderBox>
+        <Text>
+          <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+          <Text color={Theme.colors.highlight} bold>选择策略组</Text>
+        </Text>
+        <Text color={Theme.colors.dim}>  选择要写入节点名的策略组</Text>
+      </BorderBox>
 
-          return (
-            <Box key={row}>
-              <Text
-                color={
-                  isSelected ? Theme.colors.primaryBright : Theme.colors.dim
-                }
-              >
-                {isSelected ? Theme.symbols.pointer : " "}{" "}
-              </Text>
-              <Text color={checkColor} bold={checked}>
-                {checkSymbol}
-              </Text>
-              <Text
-                color={isSelected ? Theme.colors.highlight : Theme.colors.text}
-                bold={isSelected}
-              >
-                {" "}
-                {label}
-              </Text>
-            </Box>
-          );
-        })}
-
-        <Box marginTop={1}>
-          <Text color={Theme.colors.dimmer}>
-            {Theme.symbols.pointerSmall}{" "}
-          </Text>
-          <Text color={Theme.colors.accent}>{currentDesc}</Text>
-        </Box>
-        <Box>
-          <Text color={Theme.colors.dim}>
-            {breatheChar} 已选{" "}
-          </Text>
-          <Text
-            color={
-              selected.size > 0
-                ? Theme.colors.primaryBright
-                : Theme.colors.dimmer
-            }
-            bold={selected.size > 0}
-          >
-            {selected.size}
-          </Text>
-          <Text color={Theme.colors.dim}> 项</Text>
-        </Box>
+      <Box marginTop={1} paddingLeft={1}>
+        <Text color={Theme.colors.primary}>{Theme.symbols.star} </Text>
+        <Text color={Theme.colors.dim}>↑↓ 导航 · Space 多选 · Enter 确认</Text>
       </Box>
-    </ScreenCard>
+
+      <Box marginTop={1}>
+        <BorderBox>
+          <Box flexDirection="column">
+            {rows.map((row, index) => {
+              const isSelected = index === selectedIndex;
+              const checked = row === "ALL" ? allSelected : selected.has(row);
+              const label = row === "ALL" ? "ALL" : row;
+
+              return (
+                <Box key={row}>
+                  <Text color={isSelected ? Theme.colors.primary : Theme.colors.dimmer}>
+                    {isSelected ? Theme.symbols.pointer : " "}{" "}
+                  </Text>
+                  <Text
+                    color={checked ? Theme.colors.successBright : Theme.colors.dimmer}
+                    bold={checked}
+                  >
+                    {checked ? Theme.symbols.circle : Theme.symbols.circleOpen}{" "}
+                  </Text>
+                  <Text
+                    color={isSelected ? Theme.colors.highlight : Theme.colors.text}
+                    bold={isSelected}
+                  >
+                    {label}
+                  </Text>
+                </Box>
+              );
+            })}
+          </Box>
+        </BorderBox>
+      </Box>
+
+      <Box marginTop={1} paddingLeft={1}>
+        <Text color={Theme.colors.dim}>
+          {Theme.symbols.spinner[spinIdx]} {currentDesc} · 已选 </Text>
+        <Text color={selected.size > 0 ? Theme.colors.primary : Theme.colors.dimmer} bold>
+          {selected.size}
+        </Text>
+        <Text color={Theme.colors.dim}> 项</Text>
+      </Box>
+    </Box>
   );
 }
 
@@ -146,12 +125,8 @@ export function promptGroupSelection(
     render(
       <GroupSelector
         groups={groups}
-        onSubmit={(selected) => {
-          resolve(selected);
-        }}
-        onCancel={() => {
-          resolve(null);
-        }}
+        onSubmit={(selected) => resolve(selected)}
+        onCancel={() => resolve(null)}
       />,
     );
   });

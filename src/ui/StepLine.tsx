@@ -10,46 +10,20 @@ type StepLineProps = {
   children: React.ReactNode;
 };
 
-const SPIN_COLORS = [
-  "#F0956D",
-  "#D97757",
-  "#A85A3E",
-  "#D97757",
-];
-
-const AnimatedSpinner = memo(function AnimatedSpinner() {
-  const tick = useAnimationTick();
-  const idx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
-  const colorIdx = deriveFrame(tick, SPIN_COLORS.length, 2);
-  const color = SPIN_COLORS[colorIdx]!;
-
-  return (
-    <Text color={color} bold>
-      {Theme.symbols.spinner[idx]}{" "}
-    </Text>
-  );
-});
-
-const PulseIcon = memo(function PulseIcon() {
-  const tick = useAnimationTick();
-  const idx = deriveFrame(tick, Theme.symbols.glow.length, 4);
-
-  return (
-    <Text color={Theme.colors.glow}>
-      {Theme.symbols.glow[idx]}{" "}
-    </Text>
-  );
-});
-
 export const StepLine = memo(function StepLine({
   status,
   children,
 }: StepLineProps) {
+  const tick = useAnimationTick();
+  const spinIdx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
+
   if (status === "running") {
     return (
       <Box>
-        <AnimatedSpinner />
-        <Text color={Theme.colors.primaryBright}>{children}</Text>
+        <Text color={Theme.colors.primary}>
+          {Theme.symbols.spinner[spinIdx]}{" "}
+        </Text>
+        <Text color={Theme.colors.text}>{children}</Text>
       </Box>
     );
   }
@@ -60,7 +34,7 @@ export const StepLine = memo(function StepLine({
         <Text color={Theme.colors.successBright} bold>
           {Theme.symbols.tick}{" "}
         </Text>
-        <Text color={Theme.colors.success}>{children}</Text>
+        <Text color={Theme.colors.text}>{children}</Text>
       </Box>
     );
   }
@@ -68,17 +42,17 @@ export const StepLine = memo(function StepLine({
   if (status === "error") {
     return (
       <Box>
-        <Text color={Theme.colors.errorBright} bold>
+        <Text color={Theme.colors.error} bold>
           {Theme.symbols.cross}{" "}
         </Text>
-        <Text color={Theme.colors.error}>{children}</Text>
+        <Text color={Theme.colors.text}>{children}</Text>
       </Box>
     );
   }
 
   return (
     <Box>
-      <PulseIcon />
+      <Text color={Theme.colors.dim}>{Theme.symbols.circleOpen} </Text>
       <Text color={Theme.colors.dim}>{children}</Text>
     </Box>
   );
