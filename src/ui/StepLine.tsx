@@ -1,6 +1,7 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Box, Text } from "ink";
 import { Theme } from "./theme";
+import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
 type StepStatus = "pending" | "running" | "completed" | "error";
 
@@ -9,47 +10,78 @@ type StepLineProps = {
   children: React.ReactNode;
 };
 
-const LoadingOrb = memo(function LoadingOrb() {
-  const [idx, setIdx] = useState(0);
+const SPIN_COLORS = [
+  "#F0956D",
+  "#D97757",
+  "#A85A3E",
+  "#D97757",
+];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIdx((prev) => (prev + 1) % Theme.symbols.spinner.length);
-    }, 120);
+const AnimatedSpinner = memo(function AnimatedSpinner() {
+  const tick = useAnimationTick();
+  const idx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
+  const colorIdx = deriveFrame(tick, SPIN_COLORS.length, 2);
+  const color = SPIN_COLORS[colorIdx]!;
 
-    return () => clearInterval(timer);
-  }, []);
-
-  return <Text color={Theme.colors.primary}>{Theme.symbols.spinner[idx]} </Text>;
+  return (
+    <Text color={color} bold>
+      {Theme.symbols.spinner[idx]}{" "}
+    </Text>
+  );
 });
 
-export const StepLine = memo(function StepLine({ status, children }: StepLineProps) {
+const PulseIcon = memo(function PulseIcon() {
+  const tick = useAnimationTick();
+  const idx = deriveFrame(tick, Theme.symbols.glow.length, 4);
+
+  return (
+    <Text color={Theme.colors.glow}>
+      {Theme.symbols.glow[idx]}{" "}
+    </Text>
+  );
+});
+
+export const StepLine = memo(function StepLine({
+  status,
+  children,
+}: StepLineProps) {
   if (status === "running") {
     return (
       <Box>
-        <LoadingOrb />
-        <Text color={Theme.colors.primary}>{children}</Text>
+        <AnimatedSpinner />
+        <Text color={Theme.colors.primaryBright}>{children}</Text>
       </Box>
     );
   }
 
   if (status === "completed") {
     return (
-      <Text color={Theme.colors.success}>
-        {Theme.symbols.tick} {children}
-      </Text>
+      <Box>
+        <Text color={Theme.colors.successBright} bold>
+          {Theme.symbols.tick}{" "}
+        </Text>
+        <Text color={Theme.colors.success}>{children}</Text>
+      </Box>
     );
   }
 
   if (status === "error") {
     return (
-      <Text color={Theme.colors.error}>
-        {Theme.symbols.cross} {children}
-      </Text>
+      <Box>
+        <Text color={Theme.colors.errorBright} bold>
+          {Theme.symbols.cross}{" "}
+        </Text>
+        <Text color={Theme.colors.error}>{children}</Text>
+      </Box>
     );
   }
 
-  return <Text color={Theme.colors.dim}>○ {children}</Text>;
+  return (
+    <Box>
+      <PulseIcon />
+      <Text color={Theme.colors.dim}>{children}</Text>
+    </Box>
+  );
 });
 
 export default StepLine;

@@ -18,7 +18,9 @@ function SingleSelect({ title, items, onSubmit, onCancel }: SingleSelectProps) {
     if (key.upArrow) {
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : items.length - 1));
     } else if (key.downArrow) {
-      setSelectedIndex((prev) => (prev < items.length - 1 ? prev + 1 : 0));
+      setSelectedIndex((prev) =>
+        prev < items.length - 1 ? prev + 1 : 0,
+      );
     } else if (key.return) {
       const selected = items[selectedIndex];
       if (selected) {
@@ -44,10 +46,28 @@ function SingleSelect({ title, items, onSubmit, onCancel }: SingleSelectProps) {
           const isSelected = index === selectedIndex;
           return (
             <Box key={item}>
-              <Text color={isSelected ? Theme.colors.primary : Theme.colors.dim}>
+              <Text
+                color={
+                  isSelected ? Theme.colors.primaryBright : Theme.colors.dim
+                }
+              >
                 {isSelected ? Theme.symbols.pointer : " "}{" "}
               </Text>
-              <Text color={isSelected ? Theme.colors.primary : Theme.colors.text} bold={isSelected}>
+              {isSelected ? (
+                <Text color={Theme.colors.glow} bold>
+                  {Theme.symbols.diamond}{" "}
+                </Text>
+              ) : (
+                <Text color={Theme.colors.dimmer}>
+                  {Theme.symbols.diamondSmall}{" "}
+                </Text>
+              )}
+              <Text
+                color={
+                  isSelected ? Theme.colors.primaryBright : Theme.colors.text
+                }
+                bold={isSelected}
+              >
                 {item}
               </Text>
             </Box>
@@ -55,7 +75,10 @@ function SingleSelect({ title, items, onSubmit, onCancel }: SingleSelectProps) {
         })}
 
         <Box marginTop={1}>
-          <Text color={Theme.colors.dim}>↳ 当前: {current}</Text>
+          <Text color={Theme.colors.dimmer}>
+            {Theme.symbols.pointerSmall}{" "}
+          </Text>
+          <Text color={Theme.colors.accent}>当前: {current}</Text>
         </Box>
       </Box>
     </ScreenCard>

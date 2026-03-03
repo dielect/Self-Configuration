@@ -24,7 +24,19 @@ src/
     vlessParser.ts - VLESS-specific parser
     yamlNodeParser.ts - YAML-based node parser
     types.ts       - Shared types
-  ui/              - Ink-based interactive UI components
+  ui/
+    theme.ts           - Color palette, symbols, animation config
+    useAnimationTick.ts - Centralized animation tick (single setInterval)
+    Logo.tsx           - Animated gradient ASCII logo
+    ScreenCard.tsx     - Card container with animated borders
+    AnimatedBorder.tsx - Gradient-shifting border component
+    GlowText.tsx       - Color-cycling text component
+    StepLine.tsx       - Status indicators with animated spinners
+    baseConfigInput.tsx - Base config file path input
+    vlessInput.tsx     - Proxy URL/subscription input
+    outputNameInput.tsx - Output filename input
+    groupSelector.tsx  - Multi-select group picker
+    singleSelect.tsx   - Single-select provider picker
   wizard/
     runWizard.ts   - Main wizard flow orchestration
 index.ts           - Library exports

@@ -27,11 +27,14 @@ function BaseConfigInput({ defaultValue, onSubmit, onCancel }: BaseConfigInputPr
       title="Base Config"
       subtitle="输入基础配置文件路径"
       hint="Enter 确认 · q/ESC 取消"
+      step={{ current: 1, total: 3 }}
     >
       <Box flexDirection="column">
         <StepLine status="running">选择基础配置文件</StepLine>
         <Box marginTop={1}>
-          <Text color={Theme.colors.primary}>{Theme.symbols.pointer} </Text>
+          <Text color={Theme.colors.primary} bold>
+            {Theme.symbols.pointer}{" "}
+          </Text>
           <TextInput
             value={value}
             onChange={setValue}
@@ -45,8 +48,13 @@ function BaseConfigInput({ defaultValue, onSubmit, onCancel }: BaseConfigInputPr
             }}
           />
         </Box>
-        <Box marginTop={1}>
-          <Text color={Theme.colors.dim}>示例: Clash.yaml / profiles/B.yaml</Text>
+        <Box marginTop={1} flexDirection="column">
+          <Text color={Theme.colors.dimmer}>
+            {Theme.symbols.pointerSmall}{" "}
+            <Text color={Theme.colors.dim}>
+              示例: Clash.yaml / profiles/B.yaml
+            </Text>
+          </Text>
         </Box>
       </Box>
     </ScreenCard>

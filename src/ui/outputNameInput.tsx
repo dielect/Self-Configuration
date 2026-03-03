@@ -21,16 +21,22 @@ function OutputNameInput({ onSubmit, onCancel }: OutputNameInputProps) {
     }
   });
 
+  const preview = (value.trim() || "<name>") + ".yaml";
+  const hasValue = value.trim().length > 0;
+
   return (
     <ScreenCard
       title="Output Profile"
       subtitle="输入输出文件名（不含扩展名）"
       hint="固定后缀: .yaml"
+      step={{ current: 3, total: 3 }}
     >
       <Box flexDirection="column">
         <StepLine status="running">配置输出路径</StepLine>
         <Box marginTop={1}>
-          <Text color={Theme.colors.primary}>{Theme.symbols.pointer} </Text>
+          <Text color={Theme.colors.primary} bold>
+            {Theme.symbols.pointer}{" "}
+          </Text>
           <TextInput
             value={value}
             onChange={setValue}
@@ -45,7 +51,12 @@ function OutputNameInput({ onSubmit, onCancel }: OutputNameInputProps) {
           />
         </Box>
         <Box marginTop={1}>
-          <Text color={Theme.colors.info}>预览: {(value.trim() || "<name>") + ".yaml"}</Text>
+          <Text color={Theme.colors.dimmer}>
+            {Theme.symbols.pointerSmall}{" "}
+          </Text>
+          <Text color={hasValue ? Theme.colors.info : Theme.colors.dim}>
+            {Theme.symbols.diamond} {preview}
+          </Text>
         </Box>
       </Box>
     </ScreenCard>

@@ -1,58 +1,85 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Text } from "ink";
 import { Logo } from "./Logo";
+import { AnimatedBorder } from "./AnimatedBorder";
+import { GlowText } from "./GlowText";
 import { Theme } from "./theme";
+import { useAnimationTick, deriveFrame } from "./useAnimationTick";
 
 type ScreenCardProps = {
   title: string;
   subtitle?: string;
   hint?: string;
   children: React.ReactNode;
+  step?: { current: number; total: number };
 };
 
-function line(width: number): string {
-  return Theme.symbols.horizontal.repeat(Math.max(2, width));
-}
+export function ScreenCard({
+  title,
+  subtitle,
+  hint,
+  children,
+  step,
+}: ScreenCardProps) {
+  const tick = useAnimationTick();
+  const spinIdx = deriveFrame(tick, Theme.symbols.spinner.length, 1);
+  const breatheIdx = deriveFrame(tick, Theme.symbols.breathe.length, 4);
 
-export function ScreenCard({ title, subtitle, hint, children }: ScreenCardProps) {
-  const [tick, setTick] = useState(0);
+  const spin = Theme.symbols.spinner[spinIdx] ?? Theme.symbols.spinner[0];
+  const breatheChar =
+    Theme.symbols.breathe[breatheIdx] ?? Theme.symbols.breathe[0];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTick((prev) => (prev + 1) % Theme.symbols.spinner.length);
-    }, 120);
+  const cardWidth = 76;
 
-    return () => clearInterval(timer);
-  }, []);
-
-  const spin = Theme.symbols.spinner[tick] ?? Theme.symbols.spinner[0];
-  const top = `${Theme.symbols.corner.topLeft}${line(76)}${Theme.symbols.corner.topRight}`;
-  const bottom = `${Theme.symbols.corner.bottomLeft}${line(76)}${Theme.symbols.corner.bottomRight}`;
+  const stepLabel = step ? ` [${step.current}/${step.total}]` : "";
 
   return (
-    <Box flexDirection="column" width={84}>
+    <Box flexDirection="column" width={cardWidth + 4}>
       <Logo />
-      <Text color={Theme.colors.dim}>{top}</Text>
-      <Text color={Theme.colors.dim}>
-        {Theme.symbols.vertical} <Text color={Theme.colors.primary}>{spin}</Text>{" "}
-        <Text color={Theme.colors.highlight} bold>{title}</Text>
+      <Box marginTop={1} />
+      <AnimatedBorder width={cardWidth} position="top" />
+
+      <Text>
+        <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
+        <Text color={Theme.colors.primary}> {spin} </Text>
+        <Text color={Theme.colors.highlight} bold>
+          {title}
+        </Text>
+        {step ? (
+          <Text color={Theme.colors.dim}>{stepLabel}</Text>
+        ) : null}
       </Text>
+
       {subtitle ? (
-        <Text color={Theme.colors.dim}>
-          {Theme.symbols.vertical} <Text color={Theme.colors.text}>{subtitle}</Text>
+        <Text>
+          <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
+          <Text color={Theme.colors.dim}>   </Text>
+          <Text color={Theme.colors.accent}>{subtitle}</Text>
         </Text>
       ) : null}
-      <Text color={Theme.colors.dim}>{Theme.symbols.vertical}</Text>
+
+      <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
+
       <Box paddingLeft={2} flexDirection="column">
         {children}
       </Box>
-      <Text color={Theme.colors.dim}>{Theme.symbols.vertical}</Text>
+
+      <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
+
       {hint ? (
-        <Text color={Theme.colors.dim}>
-          {Theme.symbols.vertical} {hint}
+        <Text>
+          <Text color={Theme.colors.dimmer}>{Theme.symbols.vertical}</Text>
+          <Text color={Theme.colors.dim}>
+            {" "}
+            <GlowText colors={Theme.colors.gradientWarm} speed={5}>
+              {breatheChar}
+            </GlowText>{" "}
+            {hint}
+          </Text>
         </Text>
       ) : null}
-      <Text color={Theme.colors.dim}>{bottom}</Text>
+
+      <AnimatedBorder width={cardWidth} position="bottom" />
     </Box>
   );
 }
