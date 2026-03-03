@@ -1,49 +1,92 @@
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 export function Logo() {
   return (
-    <div className="mb-10 select-none">
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex items-baseline gap-1"
-      >
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="relative mb-12 select-none overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 border border-zinc-800/60 px-8 py-10 sm:px-12 sm:py-14"
+    >
+      <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          className="relative"
-          initial={{ scale: 0.9 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#ff5e62]/8 blur-3xl"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[#ff9966]/8 blur-3xl"
+          animate={{ scale: [1.1, 1, 1.1], opacity: [0.5, 0.9, 0.5] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-40 rounded-full bg-[#ffa34e]/5 blur-3xl"
+          animate={{ rotate: [0, 8, -8, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#ff9966]/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#ff5e62]/20 to-transparent" />
+
+      <div className="relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="flex items-center gap-2 mb-4"
         >
-          <span className="text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[#ff9966] via-[#ff5e62] to-[#ffa34e] bg-clip-text text-transparent">
-            Self
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff9966] to-[#ff5e62] shadow-lg shadow-[#ff5e62]/20">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-xs font-medium tracking-widest uppercase text-zinc-500">
+            Proxy Configuration Tool
           </span>
-          <motion.div
-            className="absolute -bottom-1 left-0 h-[3px] rounded-full bg-gradient-to-r from-[#ff9966] via-[#ff5e62] to-[#ffa34e]"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-          />
         </motion.div>
 
-        <motion.span
-          className="text-lg sm:text-xl font-light tracking-[0.3em] text-zinc-500 ml-2 pb-0.5"
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="flex items-baseline gap-3 mb-5"
         >
-          config
-        </motion.span>
-      </motion.div>
+          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter bg-gradient-to-r from-[#ff9966] via-[#ff5e62] to-[#ffa34e] bg-clip-text text-transparent leading-none">
+            Self
+          </h1>
+          <span className="text-2xl sm:text-3xl font-extralight tracking-[0.25em] text-zinc-400 leading-none">
+            config
+          </span>
+        </motion.div>
 
-      <motion.p
-        className="text-xs text-zinc-600 mt-3 tracking-wide"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
-      >
-        Clash 配置生成工具
-      </motion.p>
-    </div>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className="text-sm sm:text-base text-zinc-500 max-w-md leading-relaxed"
+        >
+          从 VLESS / Shadowsocks 链接或订阅地址，快速生成 Clash 配置文件
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="flex items-center gap-4 mt-6"
+        >
+          {["VLESS", "Shadowsocks", "订阅链接", "YAML"].map((tag, i) => (
+            <motion.span
+              key={tag}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 + i * 0.06 }}
+              className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50"
+            >
+              {tag}
+            </motion.span>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
   );
 }
