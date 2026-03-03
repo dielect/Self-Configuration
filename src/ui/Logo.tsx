@@ -4,6 +4,7 @@ import cfonts from "cfonts";
 import gradient from "gradient-string";
 
 const SUNSET_COLORS = ["#ff9966", "#ff5e62", "#ffa34e"];
+const CONFIG_LABEL = "c o n f i g";
 
 function generateLogo(): string[] {
   const out = cfonts.render("self", {
@@ -13,10 +14,11 @@ function generateLogo(): string[] {
     space: false,
     maxLength: 200,
   });
+  const raw = out.string.split("\n").filter((l: string) => l.trim());
+  const lastIdx = raw.length - 1;
+  raw[lastIdx] = raw[lastIdx].trimEnd() + "  " + CONFIG_LABEL;
   const g = gradient(SUNSET_COLORS);
-  const lines = out.string.split("\n").filter((l: string) => l.trim());
-  const colored = g.multiline(lines.join("\n"));
-  return colored.split("\n");
+  return g.multiline(raw.join("\n")).split("\n");
 }
 
 export const Logo = memo(function Logo() {
@@ -33,7 +35,6 @@ export const Logo = memo(function Logo() {
       {lines.map((line, i) => (
         <Text key={i}>{line}</Text>
       ))}
-      <Text color="#ff7a59" dimColor>{"  c o n f i g"}</Text>
     </Box>
   );
 });
